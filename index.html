@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>CBSE Class 12 — Humanities — Study Dashboard 2026–27</title>
+<style>
+  :root{
+    --bg:#0b0f17; --card:#141b26; --card2:#101722; --line:#243044;
+    --text:#e8eef8; --muted:#8b9bb4; --dim:#5f7089;
+    --accent:#7dd3fc;
+    --PS:#fb7185; --PY:#c084fc; --EC:#fbbf24; --MA:#38bdf8; --EN:#34d399; --PA:#f472b6;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--text);
+    font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+    font-size:14px;line-height:1.45;-webkit-font-smoothing:antialiased}
+  button,input,select{font:inherit}
+  .wrap{max-width:1440px;margin:0 auto;padding:22px 20px 60px}
+  header.top{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:14px;margin-bottom:20px}
+  .brand h1{font-size:20px;margin:0;letter-spacing:-.3px}
+  .brand p{margin:4px 0 0;color:var(--muted);font-size:12px}
+  .actions{display:flex;gap:10px;flex-wrap:wrap}
+  .btn{border:1px solid var(--line);background:var(--card);color:var(--text);padding:9px 14px;border-radius:12px;cursor:pointer;font-weight:600;font-size:12px}
+  .btn:hover{border-color:#3b4c68;transform:translateY(-1px)}
+  .btn.primary{background:linear-gradient(135deg,#0ea5e9,#6366f1);border:none;color:#fff}
+  .btn.ghost{background:transparent}
+
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:18px}
+  .stat{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px 18px;position:relative;overflow:hidden}
+  .stat::after{content:"";position:absolute;inset:auto -30px -50px auto;width:120px;height:120px;border-radius:50%;background:var(--glow,rgba(125,211,252,.08));filter:blur(6px)}
+  .stat .lbl{font-size:11px;text-transform:uppercase;letter-spacing:.09em;color:var(--muted);font-weight:700}
+  .stat .big{font-size:34px;font-weight:800;letter-spacing:-1px;margin:6px 0 2px}
+  .stat .sub{font-size:12px;color:var(--muted)}
+  .stat .chip{display:inline-block;margin-top:8px;font-size:11px;padding:3px 9px;border-radius:999px;background:#ffffff0d;border:1px solid var(--line)}
+
+  .grid{display:grid;grid-template-columns:minmax(0,1.75fr) minmax(300px,1fr);gap:18px;align-items:start}
+  .col{display:flex;flex-direction:column;gap:18px;min-width:0}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px}
+  .card h2{font-size:15px;margin:0 0 4px;letter-spacing:-.2px}
+  .card .hint{color:var(--muted);font-size:11.5px;margin:0 0 14px}
+  .row{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+  .dot{width:9px;height:9px;border-radius:50%;display:inline-block;margin-right:7px;vertical-align:middle}
+
+  .daybar{display:flex;align-items:center;gap:8px;margin-bottom:14px;flex-wrap:wrap}
+  .daybar .date{font-weight:700;font-size:14px}
+  .daybar .badge{font-size:11px;padding:4px 10px;border-radius:999px;border:1px solid var(--line);background:#ffffff08;color:var(--muted)}
+  .nav{margin-left:auto;display:flex;gap:6px}
+  .nav button{width:32px;height:30px;border-radius:9px;border:1px solid var(--line);background:var(--card2);color:var(--text);cursor:pointer}
+  .nav button:hover{border-color:var(--accent)}
+
+  .slot{display:grid;grid-template-columns:96px 20px 1fr;gap:10px;align-items:start;padding:9px 0;border-top:1px dashed #24304490}
+  .slot:first-of-type{border-top:none}
+  .slot .time{font-variant-numeric:tabular-nums;color:var(--muted);font-size:11.5px;padding-top:2px}
+  .slot input[type=checkbox]{width:17px;height:17px;accent-color:#38bdf8;margin:1px 0 0;cursor:pointer}
+  .slot .title{font-weight:600;font-size:13px}
+  .slot .detail{color:var(--muted);font-size:11.5px;margin-top:2px}
+  .slot.done .title{text-decoration:line-through;color:var(--dim)}
+  .slot.rest .title{color:var(--muted);font-weight:500}
+  .slot.focus .title{color:var(--sc,var(--text))}
+
+  .rings{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+  .ring{background:var(--card2);border:1px solid var(--line);border-radius:14px;padding:12px;text-align:center}
+  .ring svg{width:74px;height:74px;transform:rotate(-90deg)}
+  .ring .track{stroke:#263248}
+  .ring .name{font-size:12px;font-weight:700;margin-top:4px}
+  .ring .cnt{font-size:11px;color:var(--muted)}
+
+  .timeline{display:flex;gap:10px;overflow-x:auto;padding-bottom:8px;scrollbar-width:thin}
+  .exam{min-width:138px;flex:0 0 auto;border:1px solid var(--line);border-radius:14px;padding:11px;background:var(--card2);position:relative}
+  .exam.next{border-color:var(--sc);box-shadow:0 0 0 1px var(--sc) inset}
+  .exam .d{font-size:11px;color:var(--muted)}
+  .exam .s{font-weight:700;font-size:13px;margin:4px 0;color:var(--sc)}
+  .exam .t{font-size:10px;color:var(--dim)}
+  .gapmin{flex:0 0 auto;min-width:92px;text-align:center;color:var(--muted);font-size:10px;padding:26px 6px 0;position:relative}
+  .gapmin::before{content:"";position:absolute;top:44px;left:0;right:0;height:1px;background:var(--line)}
+
+  details.subj{border:1px solid var(--line);border-radius:12px;margin-bottom:8px;background:var(--card2)}
+  details.subj summary{cursor:pointer;padding:10px 12px;font-weight:700;font-size:12.5px;list-style:none;display:flex;align-items:center;gap:8px}
+  details.subj summary::-webkit-details-marker{display:none}
+  .ch{display:grid;grid-template-columns:1fr auto auto;gap:8px;align-items:center;padding:7px 10px;border-top:1px solid #ffffff0a;font-size:11.5px}
+  .ch .nm{color:var(--muted)}
+  .seg{display:flex;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+  .seg button{border:none;background:transparent;color:var(--dim);font-size:10px;padding:4px 6px;cursor:pointer}
+  .seg button.on{background:#ffffff14;color:var(--text);font-weight:700}
+  .star{border:none;background:transparent;color:var(--dim);cursor:pointer;font-size:14px;padding:2px 4px}
+  .star.on{color:#f87171}
+
+  .weak{display:flex;flex-direction:column;gap:7px}
+  .weak .w{display:flex;justify-content:space-between;align-items:center;gap:8px;background:var(--card2);border:1px solid var(--line);border-left:3px solid #f87171;border-radius:10px;padding:8px 10px;font-size:11.5px}
+  .weak .w button{border:none;background:transparent;color:var(--muted);cursor:pointer}
+  .empty{color:var(--dim);font-size:11.5px;font-style:italic}
+
+  form.mock{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  form.mock select,form.mock input{background:var(--card2);border:1px solid var(--line);color:var(--text);border-radius:9px;padding:8px;font-size:11.5px;min-width:0}
+  form.mock .full{grid-column:1/-1}
+  .mocklist{margin-top:12px;display:flex;flex-direction:column;gap:5px;max-height:170px;overflow:auto}
+  .mocklist .m{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);padding:5px 8px;border-radius:7px;background:var(--card2)}
+  .mocklist .m b{color:var(--text)}
+  .mocklist .m button{border:none;background:none;color:var(--dim);cursor:pointer}
+  #chart{width:100%;height:150px;display:block;margin-top:10px}
+
+  #printArea{display:none}
+  @media(max-width:1050px){.stats{grid-template-columns:repeat(2,1fr)}.grid{grid-template-columns:1fr}}
+  @media(max-width:560px){.stats{grid-template-columns:1fr 1fr;gap:10px}.stat .big{font-size:27px}.wrap{padding:14px 12px 40px}.rings{grid-template-columns:repeat(2,1fr)}}
+
+  @media print{
+    body{background:#fff;color:#111;font-family:Arial,sans-serif;font-size:10px}
+    .wrap>*:not(#printArea){display:none!important}
+    #printArea{display:block!important;padding:0}
+    #printArea h1{font-size:18px;margin:0 0 2px}
+    #printArea h2{font-size:12px;margin:14px 0 5px;border-bottom:1px solid #bbb;padding-bottom:3px}
+    #printArea table{width:100%;border-collapse:collapse;margin-bottom:8px}
+    #printArea th,#printArea td{border:1px solid #bbb;padding:4px 6px;text-align:left;vertical-align:top}
+    #printArea th{background:#eee}
+    .pb{page-break-inside:avoid}
+    @page{size:A4;margin:12mm}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="brand">
+      <h1>CBSE Class 12 · Humanities · Study Dashboard</h1>
+      <p>19 Nov 2026 → 19 Mar 2027 &nbsp;•&nbsp; 121 days &nbsp;•&nbsp; saved automatically in this browser</p>
+      <p id="liveClock" style="color:var(--accent);font-variant-numeric:tabular-nums;font-size:11.5px">–</p>
+    </div>
+    <div class="actions">
+      <button class="btn primary" id="printBtn">🖨 Print my plan</button>
+      <button class="btn ghost" id="resetBtn">Reset progress</button>
+    </div>
+  </header>
+
+  <section class="stats">
+    <div class="stat" style="--glow:rgba(56,189,248,.12)">
+      <div class="lbl">Next exam in</div><div class="big" id="sDays">–</div>
+      <div class="sub" id="sDaysSub">live countdown</div>
+    </div>
+    <div class="stat" style="--glow:rgba(52,211,153,.12)">
+      <div class="lbl">Syllabus completed</div><div class="big" id="sPct">0%</div>
+      <div class="sub" id="sPctSub">0 of 0 chapters revised</div>
+    </div>
+    <div class="stat" style="--glow:rgba(251,191,36,.12)">
+      <div class="lbl">Next exam</div><div class="big" id="sNext" style="font-size:20px">–</div>
+      <div class="sub" id="sNextSub">–</div>
+    </div>
+    <div class="stat" style="--glow:rgba(192,132,252,.12)">
+      <div class="lbl">Current streak</div><div class="big" id="sStreak">0 <span style="font-size:14px">days</span></div>
+      <div class="sub" id="sStreakSub">tick tasks to build a streak</div>
+    </div>
+  </section>
+
+  <div class="grid">
+    <div class="col">
+      <section class="card">
+        <h2>Today's Plan</h2>
+        <p class="hint">45–50 minute blocks · 10–20 minute breaks · 8 hours sleep (22:30–06:30). Tick a block to update every stat above.</p>
+        <div class="daybar">
+          <span class="date" id="viewDate">–</span>
+          <span class="badge" id="viewType">–</span>
+          <div class="nav">
+            <button id="prevDay" title="Previous day">←</button>
+            <button id="todayBtn" title="Jump to today" style="width:auto;padding:0 10px;font-size:11px">Today</button>
+            <button id="nextDay" title="Next day">→</button>
+          </div>
+        </div>
+        <div id="todayPlan"></div>
+      </section>
+
+      <section class="card">
+        <h2>Subject progress</h2>
+        <p class="hint">Chapters revised ÷ total chapters for each subject.</p>
+        <div class="rings" id="rings"></div>
+      </section>
+
+      <section class="card">
+        <h2>Exam timeline</h2>
+        <p class="hint">Board exams only. Gap days are reserved for the next paper's subject. The highlighted card is your next exam.</p>
+        <div class="timeline" id="timeline"></div>
+      </section>
+    </div>
+
+    <div class="col">
+      <section class="card">
+        <h2>Chapter tracker</h2>
+        <p class="hint">NS = Not started · L = Learning · R = Revised. ☆ marks a difficult chapter for the weak-topics list.</p>
+        <div id="tracker"></div>
+      </section>
+
+      <section class="card">
+        <h2>Weak topics</h2>
+        <p class="hint">Chapters you mark ☆ difficult appear here automatically.</p>
+        <div class="weak" id="weak"></div>
+      </section>
+
+      <section class="card">
+        <h2>Mock test tracker</h2>
+        <p class="hint">Log each test score to watch the trend line rise.</p>
+        <form class="mock" id="mockForm">
+          <select id="mSub"></select>
+          <input type="date" id="mDate" required />
+          <input type="number" id="mScore" placeholder="Score" min="0" required />
+          <input type="number" id="mMax" placeholder="Max" value="100" min="1" required />
+          <button class="btn primary full" type="submit">Add score</button>
+        </form>
+        <svg id="chart" viewBox="0 0 320 150" preserveAspectRatio="none"></svg>
+        <div class="mocklist" id="mocklist"></div>
+      </section>
+    </div>
+  </div>
+
+  <div id="printArea"></div>
+</div>
+
+<script>
+/* ---------- DATA ---------- */
+const S = {
+  PS:{n:'Political Science',s:'PolSci',c:'#fb7185',w:1.10},
+  PY:{n:'Psychology',       s:'Psych', c:'#c084fc',w:1.15},
+  EC:{n:'Economics',        s:'Econ',  c:'#fbbf24',w:1.25},
+  MA:{n:'Mathematics',      s:'Maths', c:'#38bdf8',w:1.60},
+  EN:{n:'English Core',     s:'English',c:'#34d399',w:0.90},
+  PA:{n:'Painting',         s:'Painting',c:'#f472b6',w:0.70}
+};
+const order = ['PS','PY','EC','MA','EN','PA'];
+
+const CH = [
+ ['PS','The End of Bipolarity'],['PS','Contemporary Centres of Power'],['PS','Contemporary South Asia'],['PS','International Organizations'],['PS','Security in the Contemporary World'],['PS','Environment and Natural Resources'],['PS','Globalisation'],['PS','Challenges of Nation-Building'],['PS','Era of One-Party Dominance'],['PS','Politics of Planned Development'],['PS',"India's External Relations"],['PS','Challenges to and Restoration of the Congress System'],['PS','The Crisis of Democratic Order'],['PS','Regional Aspirations'],['PS','Recent Developments in Indian Politics'],
+ ['PY','Variations in Psychological Attributes'],['PY','Self and Personality'],['PY','Meeting Life Challenges'],['PY','Psychological Disorders'],['PY','Therapeutic Approaches'],['PY','Attitude and Social Cognition'],['PY','Social Influence and Group Processes'],
+ ['EC','National Income and Related Aggregates'],['EC','Money and Banking'],['EC','Determination of Income and Employment'],['EC','Government Budget and the Economy'],['EC','Balance of Payments'],['EC','Development Experience (1947–90) and Economic Reforms since 1991'],['EC','Current Challenges facing Indian Economy'],['EC','Development Experience of India – A Comparison with Neighbours'],
+ ['MA','Relations and Functions'],['MA','Inverse Trigonometric Functions'],['MA','Matrices'],['MA','Determinants'],['MA','Continuity and Differentiability'],['MA','Applications of Derivatives'],['MA','Integrals'],['MA','Application of the Integrals'],['MA','Differential Equations'],['MA','Vectors'],['MA','Three-Dimensional Geometry'],['MA','Linear Programming'],['MA','Probability'],
+ ['EN','The Last Lesson'],['EN','Lost Spring'],['EN','Deep Water'],['EN','The Rattrap'],['EN','Indigo'],['EN','Poets and Pancakes'],['EN','The Interview'],['EN','Going Places'],['EN','My Mother at Sixty-Six'],['EN','Keeping Quiet'],['EN','A Thing of Beauty'],['EN','A Roadside Stand'],['EN',"Aunt Jennifer's Tigers"],['EN','The Third Level'],['EN','The Tiger King'],['EN','Journey to the End of the Earth'],['EN','The Enemy'],['EN','On the Face of It'],['EN','Memories of Childhood'],
+ ['PA','Rajasthani School of Miniature Painting'],['PA','Pahari School of Miniature Painting'],['PA','Mughal School of Miniature Painting'],['PA','Deccan School of Miniature Painting'],['PA','Indian National Flag'],['PA','Bengal School of Painting'],['PA','Modern Trends in Indian Art'],['PA','Nature and Object Study (Practical)'],['PA','Painting Composition (Practical)'],['PA','Portfolio Assessment (Practical)']
+].map((x,i)=>({id:x[0]+(i+1),s:x[0],n:x[1]}));
+
+const EXAMS = [
+ ['2026-11-20','PS','Test Series 1'],['2026-11-23','PY','Test Series 1'],['2026-11-25','EC','Test Series 1'],
+ ['2026-12-02','PY','Test Series 2'],['2026-12-04','EC','Test Series 2'],['2026-12-07','MA','Test Series 2'],['2026-12-09','EN','Test Series 2'],['2026-12-11','PS','Test Series 2'],
+ ['2026-12-15','PS','Pre-Board 1'],['2026-12-18','EN','Pre-Board 1'],['2026-12-21','PY','Pre-Board 1'],['2026-12-24','EC','Pre-Board 1'],['2026-12-28','MA','Pre-Board 1'],['2026-12-30','PA','Pre-Board 1'],
+ ['2027-01-05','MA','Pre-Board 2'],['2027-01-08','PS','Pre-Board 2'],['2027-01-11','PY','Pre-Board 2'],['2027-01-14','EC','Pre-Board 2'],['2027-01-18','EN','Pre-Board 2'],['2027-01-21','PA','Pre-Board 2'],
+ ['2027-02-24','PA','BOARD'],['2027-03-02','PY','BOARD'],['2027-03-05','EN','BOARD'],['2027-03-09','MA','BOARD'],['2027-03-16','EC','BOARD'],['2027-03-19','PS','BOARD']
+].map(x=>({date:x[0],s:x[1],label:x[2],board:x[2]==='BOARD'}));
+
+const START='2026-11-19', END='2027-03-19';
+const BOARD_EXAMS = EXAMS.filter(e=>e.board);
+
+/* ---------- STATE ---------- */
+const KEY='cbse26_humanities_v1';
+let st = {status:{},difficult:{},done:{},mocks:[]};
+try{ const raw=localStorage.getItem(KEY); if(raw) st=Object.assign(st,JSON.parse(raw)); }catch(e){}
+function save(){ localStorage.setItem(KEY,JSON.stringify(st)); }
+
+/* ---------- DATE HELPERS ---------- */
+function pd(s){return new Date(s+'T00:00:00');}
+function ds(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
+function addDays(s,n){const d=pd(s);d.setDate(d.getDate()+n);return ds(d);}
+function diff(a,b){return Math.round((pd(b)-pd(a))/86400000);}
+function dow(s){return pd(s).getDay();}
+function nice(s){return pd(s).toLocaleDateString('en-IN',{weekday:'short',day:'numeric',month:'short',year:'numeric'});}
+function shortDate(s){return pd(s).toLocaleDateString('en-IN',{day:'numeric',month:'short'});}
+
+/* ---------- PLAN BUILDER ---------- */
+function buildPlan(){
+  const plan={};
+  const ptr={}; order.forEach(s=>ptr[s]=0);
+  const assigned={}; order.forEach(s=>assigned[s]=[]);
+  const acc={}; order.forEach(s=>acc[s]=0);
+  const totalW=order.reduce((a,s)=>a+S[s].w,0);
+  const revPtr={}; order.forEach(s=>revPtr[s]=0);
+
+  function take(s){
+    const list=CH.filter(c=>c.s===s);
+    if(ptr[s]>=list.length) return null;
+    const c=list[ptr[s]++]; assigned[s].push(c.id); return c;
+  }
+  function rotate(exclude){
+    order.forEach(s=>acc[s]+=S[s].w);
+    const avail=order.filter(s=>s!==exclude && ptr[s]<CH.filter(c=>c.s===s).length);
+    if(!avail.length) return null;
+    const pick=avail.reduce((a,b)=>acc[b]>acc[a]?b:a,avail[0]);
+    acc[pick]-=totalW; return pick;
+  }
+  function revChapter(s){
+    const a=assigned[s]; if(!a.length) return null;
+    const id=a[revPtr[s]%a.length]; revPtr[s]++;
+    return CH.find(c=>c.id===id);
+  }
+  function T(time,title,detail,chapterId,bulkSub){return {time,title,detail,chapterId:chapterId||null,bulkSub:bulkSub||null};}
+
+  const morning=[
+    ['06:30–07:00','Wake, hydrate, 10-min stretch','Light movement — no phone'],
+    ['07:00–07:50','Block 1 · Learn (focus)','NCERT line-by-line + margin notes'],
+    ['07:50–08:10','Break','Walk / water — no screens'],
+    ['08:10–09:00','Block 2 · Practice (focus)','Examples and in-text questions'],
+    ['09:00–09:20','Break','Stretch, eyes off screen'],
+    ['09:20–10:10','Block 3 · Learn (second subject)','New chapter from weighted rotation'],
+    ['10:10–10:30','Break','Snack + walk'],
+    ['10:30–11:20','Block 4 · Practice (second subject)','Problems / answer writing'],
+    ['11:20–12:30','Lunch + rest','Step away from the desk'],
+    ['12:30–13:20','Block 5 · Written practice (focus)','Past-paper style questions, timed'],
+    ['13:20–13:40','Break','Power nap optional (20 min max)'],
+    ['13:40–14:30','Block 6 · Revision of earlier chapter','Recall from memory, then check'],
+    ['14:30–15:00','Break','Tea / walk'],
+    ['15:00–15:50','Block 7 · Third subject / backlog','Weighted rotation keeps all six moving'],
+    ['15:50–16:15','Break','Reset'],
+    ['16:15–17:00','Weak-topic drill + plan tomorrow','10 difficult questions or flashcards'],
+    ['17:00–19:30','Exercise, dinner, family time','Move your body — protect the sleep window'],
+    ['20:00–20:40','Optional light reading','Revision cards only — no heavy new work'],
+    ['22:30–06:30','Sleep · 8 hours','Non-negotiable: 7–8 hrs every night']
+  ];
+  function standardDay(date,focus){
+    const tasks=[];
+    const c1=take(focus);
+    const second=rotate(focus); const c2=second?take(second):null;
+    const third=rotate(focus); const c3=third?take(third):null;
+    const rc=revChapter(focus);
+    morning.forEach((m,i)=>{
+      let title=m[1],detail=m[2],cid=null,bulk=null;
+      if(i===1){ title='Block 1 · Learn · '+S[focus].s; detail=c1?('Chapter: '+c1.n):('Revision of '+S[focus].n); cid=c1?c1.id:null; }
+      if(i===3){ title='Block 2 · Practice · '+S[focus].s; detail='NCERT examples + short answers'+(c1?(' for '+c1.n):''); cid=c1?c1.id:null; }
+      if(i===5 && c2){ title='Block 3 · Learn · '+S[second].s; detail='Chapter: '+c2.n; cid=c2.id; }
+      if(i===7 && c2){ title='Block 4 · Practice · '+S[second].s; detail='Problems / answer writing for '+c2.n; }
+      if(i===9){ title='Block 5 · Written practice · '+S[focus].s; detail='Timed past-paper questions'; }
+      if(i===11 && rc){ title='Block 6 · Revise · '+S[focus].s; detail='Recall: '+rc.n; cid=rc.id; }
+      if(i===13 && c3){ title='Block 7 · Learn · '+S[third].s; detail='Chapter: '+c3.n; cid=c3.id; }
+      if(i===15){ title='Weak-topic drill + plan tomorrow'; detail='10 difficult questions or flashcards'; }
+      tasks.push({time:m[0],title,detail,chapterId:cid,bulkSub:bulk,rest:[0,2,4,6,8,10,12,14,16,17,18].includes(i)});
+    });
+    return {date,type:'study',subject:focus,label:'Learn + practice',tasks};
+  }
+
+  function examEve(date,exam){
+    const s=exam.s, chapters=CH.filter(c=>c.s===s);
+    const tasks=[
+      T('07:00–07:50','Full revision · Part 1','Read all '+chapters.length+' chapters: NCERT highlights + margin notes',null,s),
+      T('08:10–09:00','Full revision · Part 2','Definitions, formulas, dates, names — one-page sheet',null,s),
+      T('09:20–10:10','Weak topics · '+S[s].s,'Re-attempt every chapter marked difficult',null,s),
+      T('10:30–11:20','Sample paper section A','Timed, no notes',null,s),
+      T('12:30–13:20','Sample paper section B','Timed, no notes',null,s),
+      T('13:40–14:30','Answer-key audit','Mark and write correction notes',null,s),
+      T('15:00–15:50','Flashcard rapid recall','All formulas / definitions / case facts',null,s),
+      T('16:15–17:00','Light recall only','Stop heavy study — protect sleep',null,s),
+      ...(dow(date)===0?[T('17:00–19:30','SUNDAY · Previous Year Paper · '+S[s].s,'3 hours under exam conditions, then check answers',null,s)]:[]),
+      T(dow(date)===0?'20:00–21:00':'17:00–19:30','Early dinner + wind down','Lay out admit card, pen, water',null,s),
+      T('22:30–06:30','Sleep · 8 hours','A rested brain writes better answers',null,s)
+    ];
+    return {date,type:'eve',subject:s,label:'FULL REVISION DAY — '+S[s].n,tasks};
+  }
+  function examDay(date,exam){
+    return {date,type:'exam',subject:exam.s,label:'Exam day · '+S[exam.s].n+' · '+exam.label,tasks:[
+      T('06:30–07:00','Wake, light breakfast','No heavy revision today'),
+      T('07:00–07:30','30-min quick recall','Only one-page sheet, then stop'),
+      T('10:30–13:30','EXAM · '+S[exam.s].n,exam.label==='BOARD'?'CBSE Board paper · 10:30–13:30 (Painting 12:30)':'School / test-series paper'),
+      T('14:00–16:00','Break — no answer discussion','Protect your next subject'),
+      T('16:15–17:00','Preview next paper (light)','Only if a gap day follows'),
+      T('22:30–06:30','Sleep · 8 hours','Reset for tomorrow')
+    ]};
+  }
+  function sunday(date,focus){
+    return {date,type:'sunday',subject:focus,label:'Previous Year Paper — '+S[focus].s,tasks:[
+      T('07:00–07:30','Warm-up recall','Formula / definition sheet'),
+      T('10:30–13:30','PREVIOUS YEAR PAPER · '+S[focus].s,'3 hours, exam conditions, no notes'),
+      T('14:00–15:00','Paper analysis','Mark errors, write why each went wrong'),
+      T('15:00–15:50','Re-attempt wrong questions','No book until finished'),
+      T('16:15–17:00','Add errors to weak topics','Mark those chapters ☆ in the tracker'),
+      T('22:30–06:30','Sleep · 8 hours','Recovery day')
+    ]};
+  }
+  function saturday(date,focus){
+    if(focus){
+      return {date,type:'catchup',subject:focus,label:'Lighter catch-up · '+S[focus].s+' only',tasks:[
+        T('07:00–07:50','Backlog · '+S[focus].s,'Finish pending '+S[focus].s+' work'),
+        T('08:10–09:00','Weak topics · '+S[focus].s,'Revisit ☆ chapters of '+S[focus].s),
+        T('10:30–11:20','One-page sheet · '+S[focus].s,'Definitions / formulas / dates'),
+        T('12:30–13:20','Short quiz · '+S[focus].s,'30 minutes, low pressure'),
+        T('16:15–17:00','Weekly wrap-up','Tick off finished tasks, plan next week'),
+        T('22:30–06:30','Sleep · 8 hours','Earlier bedtime tonight')
+      ]};
+    }
+    return {date,type:'catchup',subject:null,label:'Lighter catch-up day',tasks:[
+      T('07:00–07:50','Clear backlog','Finish anything left from the week'),
+      T('08:10–09:00','Weak-topic review','Revisit ☆ chapters only'),
+      T('10:30–11:20','Organise notes','One-page sheets for the week'),
+      T('12:30–13:20','Short quiz','30 minutes, low pressure'),
+      T('16:15–17:00','Weekly wrap-up','Tick off finished tasks, plan next week'),
+      T('22:30–06:30','Sleep · 8 hours','Earlier bedtime tonight')
+    ]};
+  }
+  function gapDay(date,focus){
+    return {date,type:'gap',subject:focus,label:'Gap day · ONLY '+S[focus].s,tasks:[
+      T('07:00–07:50','Block 1 · '+S[focus].s,'NCERT chapter read',null,null),
+      T('08:10–09:00','Block 2 · '+S[focus].s,'Questions from that chapter'),
+      T('09:20–10:10','Block 3 · '+S[focus].s,'Second chapter / concept'),
+      T('10:30–11:20','Block 4 · '+S[focus].s,'Answer writing practice'),
+      T('12:30–13:20','Block 5 · '+S[focus].s,'Full revision of weak areas'),
+      T('13:40–14:30','Block 6 · '+S[focus].s,'Timed mock section'),
+      T('15:00–15:50','Block 7 · '+S[focus].s,'Error log + flashcards'),
+      T('16:15–17:00','One-page sheet','Everything you must recall tomorrow'),
+      T('22:30–06:30','Sleep · 8 hours','No other subject today')
+    ].map(t=>T(t.time,t.title,t.detail))};
+  }
+  function phaseLabel(date){
+    if(date<='2027-02-01') return 'Phase 1 · Learn';
+    if(date<='2027-02-20') return 'Phase 2 · Revise';
+    return 'Phase 3 · Mock tests';
+  }
+
+  for(let d=START; d<=END; d=addDays(d,1)){
+    const examToday=EXAMS.find(e=>e.date===d);
+    const eve=EXAMS.find(e=>e.date===addDays(d,1));
+    const dowd=dow(d);
+    let day;
+    if(examToday) day=examDay(d,examToday);
+    else if(eve) day=examEve(d,eve);
+    else if(dowd===0){
+      const nx=EXAMS.find(e=>e.date>=d)||EXAMS[EXAMS.length-1];
+      day=sunday(d,nx.s);
+    }
+    else if(dowd===6){
+      const nb=BOARD_EXAMS.find(e=>e.date>d);
+      day=saturday(d, nb && d>='2027-02-24' ? nb.s : null);
+    }
+    else {
+      const nextBoard=BOARD_EXAMS.find(e=>e.date>d);
+      const prevBoard=[...BOARD_EXAMS].reverse().find(e=>e.date<d);
+      if(nextBoard && prevBoard && diff('2027-02-24',d)>=0) day=gapDay(d,nextBoard.s);
+      else {
+        const nx=EXAMS.find(e=>e.date>=d)||EXAMS[EXAMS.length-1];
+        day=standardDay(d,nx.s);
+      }
+    }
+    day.phase=phaseLabel(d);
+    plan[d]=day;
+  }
+  return plan;
+}
+const PLAN=buildPlan();
+
+/* ---------- STATS ---------- */
+function statusOf(id){return st.status[id]||'ns';}
+function allChapters(s){return s?CH.filter(c=>c.s===s):CH;}
+function pctOf(list){
+  if(!list.length) return 0;
+  const sum=list.reduce((a,c)=>a+({ns:0,learn:.5,rev:1})[statusOf(c.id)],0);
+  return Math.round(sum/list.length*100);
+}
+function nextExam(from){
+  return EXAMS.find(e=>e.date>=from)||EXAMS[EXAMS.length-1];
+}
+function streak(){
+  const days=Object.keys(st.done).filter(k=>st.done[k]&&st.done[k].some(Boolean));
+  if(!days.length) return 0;
+  days.sort();
+  let cur=days[days.length-1], n=0;
+  const today=ds(new Date());
+  if(cur!==today && cur!==addDays(today,-1)) return 0;
+  while(st.done[cur]&&st.done[cur].some(Boolean)){ n++; cur=addDays(cur,-1); }
+  return n;
+}
+function renderStats(){
+  const today=ds(new Date());
+  const nx=nextExam(today);
+  const dd=diff(today,nx.date);
+  document.getElementById('sDays').textContent = dd===0?'TODAY':dd;
+  document.getElementById('sDaysSub').textContent = (dd===0?'Exam today · ':'in '+dd+' day'+(dd===1?'':'s')+' · ')+S[nx.s].n;
+  const p=pctOf(CH);
+  document.getElementById('sPct').textContent=p+'%';
+  const rev=CH.filter(c=>statusOf(c.id)==='rev').length;
+  document.getElementById('sPctSub').textContent=rev+' of '+CH.length+' chapters revised';
+  document.getElementById('sNext').textContent=S[nx.s].s;
+  document.getElementById('sNextSub').innerHTML='<span class="dot" style="background:'+S[nx.s].c+'"></span>'+nice(nx.date)+' · '+nx.label;
+  const sk=streak();
+  document.getElementById('sStreak').innerHTML=sk+' <span style="font-size:14px">days</span>';
+  document.getElementById('sStreakSub').textContent=sk?'Keep it going — tick today’s blocks':'Tick tasks to build a streak';
+}
+
+/* ---------- TODAY PLAN ---------- */
+let viewDate = (PLAN[ds(new Date())]?ds(new Date()):START);
+function renderDay(){
+  const day=PLAN[viewDate];
+  if(!day) return;
+  document.getElementById('viewDate').textContent=nice(viewDate);
+  const badge=document.getElementById('viewType');
+  badge.textContent=day.phase+' · '+day.label;
+  badge.style.borderColor=day.subject?S[day.subject].c:'var(--line)';
+  badge.style.color=day.subject?S[day.subject].c:'var(--muted)';
+  const done=st.done[viewDate]||[];
+  document.getElementById('todayPlan').innerHTML=day.tasks.map((t,i)=>{
+    const on=!!done[i];
+    const sc=day.subject?S[day.subject].c:'var(--text)';
+    return '<div class="slot '+(on?'done ':'')+(t.rest?'rest ':'focus')+'" style="--sc:'+sc+'">'+
+      '<div class="time">'+t.time+'</div>'+
+      '<input type="checkbox" data-i="'+i+'" '+(on?'checked':'')+' aria-label="'+t.title+'">'+
+      '<div><div class="title">'+t.title+'</div><div class="detail">'+t.detail+'</div></div></div>';
+  }).join('');
+  document.querySelectorAll('#todayPlan input[type=checkbox]').forEach(cb=>{
+    cb.addEventListener('change',()=>{
+      const i=+cb.dataset.i, t=day.tasks[i];
+      if(!st.done[viewDate]) st.done[viewDate]=[];
+      st.done[viewDate][i]=cb.checked;
+      if(t.bulkSub){ allChapters(t.bulkSub).forEach(c=>{ if(cb.checked) st.status[c.id]='rev'; }); }
+      else if(t.chapterId){
+        const cur=statusOf(t.chapterId);
+        st.status[t.chapterId]=cb.checked?(cur==='ns'?'learn':'rev'):(cur==='rev'?'learn':'ns');
+      }
+      save(); renderAll();
+    });
+  });
+}
+
+/* ---------- RINGS ---------- */
+function renderRings(){
+  document.getElementById('rings').innerHTML=order.map(s=>{
+    const list=allChapters(s), p=pctOf(list), c=S[s].c;
+    const R=30,C=2*Math.PI*R,off=C*(1-p/100);
+    return '<div class="ring"><svg viewBox="0 0 74 74">'+
+      '<circle class="track" cx="37" cy="37" r="'+R+'" fill="none" stroke-width="7"/>'+
+      '<circle cx="37" cy="37" r="'+R+'" fill="none" stroke="'+c+'" stroke-width="7" stroke-linecap="round" stroke-dasharray="'+C+'" stroke-dashoffset="'+off+'"/>'+
+      '<text x="37" y="41" text-anchor="middle" fill="#e8eef8" font-size="15" font-weight="700" transform="rotate(90 37 37)">'+p+'%</text></svg>'+
+      '<div class="name" style="color:'+c+'">'+S[s].s+'</div>'+
+      '<div class="cnt">'+list.filter(x=>statusOf(x.id)==='rev').length+' / '+list.length+' revised</div></div>';
+  }).join('');
+}
+
+/* ---------- TIMELINE ---------- */
+function renderTimeline(){
+  const today=ds(new Date());
+  const nx=nextExam(today);
+  let html='';
+  BOARD_EXAMS.forEach((e,i)=>{
+    const prev=i?BOARD_EXAMS[i-1]:null;
+    if(prev){
+      const g=diff(prev.date,e.date)-1;
+      html+='<div class="gapmin">'+g+' gap days<br><span style="color:'+S[e.s].c+'">only '+S[e.s].s+'</span></div>';
+    }
+    const isNext=e.date>=today && e===nx;
+    html+='<div class="exam '+(isNext?'next':'')+'" style="--sc:'+S[e.s].c+'">'+
+      '<div class="d">'+nice(e.date).replace(/ \d{4}/,'')+'</div>'+
+      '<div class="s">'+S[e.s].s+'</div>'+
+      '<div class="t">'+(isNext?'NEXT BOARD':'Board paper')+'</div></div>';
+  });
+  document.getElementById('timeline').innerHTML=html;
+}
+
+/* ---------- TRACKER ---------- */
+function renderTracker(){
+  document.getElementById('tracker').innerHTML=order.map((s,i)=>{
+    const rows=allChapters(s).map(c=>{
+      const stt=statusOf(c.id), diffi=!!st.difficult[c.id];
+      return '<div class="ch"><span class="nm">'+c.n+'</span>'+
+        '<span class="seg">'+[['ns','NS'],['learn','L'],['rev','R']].map(([v,l])=>
+          '<button data-id="'+c.id+'" data-v="'+v+'" class="'+(stt===v?'on':'')+'">'+l+'</button>').join('')+'</span>'+
+        '<button class="star '+(diffi?'on':'')+'" data-star="'+c.id+'" title="Mark difficult">☆</button></div>';
+    }).join('');
+    const p=pctOf(allChapters(s));
+    return '<details class="subj" '+(i===0?'open':'')+'><summary><span class="dot" style="background:'+S[s].c+'"></span>'+
+      S[s].n+' <span style="margin-left:auto;color:var(--muted);font-weight:500">'+p+'%</span></summary>'+rows+'</details>';
+  }).join('');
+  document.querySelectorAll('#tracker .seg button').forEach(b=>b.onclick=()=>{
+    st.status[b.dataset.id]=b.dataset.v; save(); renderAll();
+  });
+  document.querySelectorAll('#tracker .star').forEach(b=>b.onclick=()=>{
+    st.difficult[b.dataset.id]=!st.difficult[b.dataset.id]; save(); renderAll();
+  });
+}
+function renderWeak(){
+  const weak=CH.filter(c=>st.difficult[c.id]);
+  document.getElementById('weak').innerHTML=weak.length?weak.map(c=>
+    '<div class="w"><span><span class="dot" style="background:'+S[c.s].c+'"></span>'+c.n+'</span>'+
+    '<button data-remove="'+c.id+'" title="Remove">✕</button></div>').join(''):'<div class="empty">No weak topics marked yet. Star any chapter above.</div>';
+  document.querySelectorAll('#weak button').forEach(b=>b.onclick=()=>{st.difficult[b.dataset.remove]=false;save();renderAll();});
+}
+
+/* ---------- MOCKS + CHART ---------- */
+function renderMocks(){
+  const sel=document.getElementById('mSub');
+  if(!sel.options.length) sel.innerHTML=order.map(s=>'<option value="'+s+'">'+S[s].n+'</option>').join('');
+  const list=[...st.mocks].sort((a,b)=>a.date.localeCompare(b.date));
+  document.getElementById('mocklist').innerHTML=list.length?list.map((m,i)=>
+    '<div class="m"><span><span class="dot" style="background:'+S[m.s].c+'"></span>'+shortDate(m.date)+' · '+S[m.s].s+'</span>'+
+    '<span><b>'+m.score+'/'+m.max+'</b> ('+Math.round(m.score/m.max*100)+'%) <button data-del="'+i+'">✕</button></span></div>').join(''):'<div class="empty">No scores logged yet.</div>';
+  document.querySelectorAll('#mocklist button').forEach(b=>b.onclick=()=>{st.mocks.splice(+b.dataset.del,1);save();renderAll();});
+  const svg=document.getElementById('chart');
+  if(!list.length){svg.innerHTML='<text x="160" y="78" text-anchor="middle" fill="#5f7089" font-size="11">Add scores to see your improvement line</text>';return;}
+  const W=320,H=150,padX=22,padY=14;
+  const pts=list.map((m,i)=>{
+    const x=list.length===1?W/2:padX+i*(W-2*padX)/(list.length-1);
+    const pctv=m.score/m.max;
+    const y=H-padY-pctv*(H-2*padY-10);
+    return {x,y,m,pct:pctv};
+  });
+  let g='';
+  [0,.25,.5,.75,1].forEach(v=>{const y=H-padY-v*(H-2*padY-10);g+='<line x1="'+padX+'" x2="'+(W-padX)+'" y1="'+y+'" y2="'+y+'" stroke="#243044" stroke-width="1"/>'+
+    '<text x="2" y="'+(y+3)+'" fill="#5f7089" font-size="8">'+(v*100)+'</text>';});
+  if(pts.length>1) g+='<polyline fill="none" stroke="#7dd3fc" stroke-width="2" points="'+pts.map(p=>p.x+','+p.y).join(' ')+'"/>';
+  pts.forEach(p=>{g+='<circle cx="'+p.x+'" cy="'+p.y+'" r="4" fill="'+S[p.m.s].c+'"/>'+
+    '<text x="'+p.x+'" y="'+(p.y-9)+'" text-anchor="middle" fill="#e8eef8" font-size="8">'+Math.round(p.pct*100)+'</text>';});
+  svg.innerHTML=g;
+}
+
+/* ---------- PRINT AREA ---------- */
+function buildPrint(){
+  const weeks={};
+  Object.values(PLAN).forEach(d=>{
+    const dt=pd(d.date); dt.setDate(dt.getDate()-((dt.getDay()+6)%7));
+    const wk=ds(dt);
+    weeks[wk]=weeks[wk]||{focus:{},chapters:[],tests:[]};
+    if(d.subject) weeks[wk].focus[d.subject]=(weeks[wk].focus[d.subject]||0)+1;
+    d.tasks.forEach(t=>{ if(t.chapterId && t.title.startsWith('Block 1 · Learn')) weeks[wk].chapters.push(t.chapterId); });
+    if(d.type==='exam'||d.type==='eve') weeks[wk].tests.push(shortDate(d.date)+' '+S[d.subject].s+(d.type==='eve'?' (revision)':''));
+  });
+  const weekRows=Object.keys(weeks).sort().map(w=>{
+    const x=weeks[w];
+    const focus=Object.entries(x.focus).sort((a,b)=>b[1]-a[1]).slice(0,3).map(([s,n])=>S[s].s+' ('+n+'d)').join(', ')||'—';
+    const chs=[...new Set(x.chapters)].map(id=>CH.find(c=>c.id===id)).filter(Boolean).map(c=>S[c.s].s+': '+c.n).join(' · ')||'—';
+    return '<tr><td>'+shortDate(w)+' – '+shortDate(addDays(w,6))+'</td><td>'+focus+'</td><td>'+chs+'</td><td>'+(x.tests.join(', ')||'—')+'</td></tr>';
+  }).join('');
+  const boardRows=BOARD_EXAMS.map((e,i)=>{
+    const g=i?diff(BOARD_EXAMS[i-1].date,e.date)-1:0;
+    return '<tr><td>'+nice(e.date)+'</td><td>'+S[e.s].n+'</td><td>'+(i?'Gap: '+g+' days → only '+S[e.s].n:'First paper')+'</td></tr>';
+  }).join('');
+  document.getElementById('printArea').innerHTML=
+    '<h1>CBSE Class 12 · Humanities — Study Plan</h1>'+
+    '<p>19 November 2026 → 19 March 2027 · 121 days · 6 subjects · 72 chapters</p>'+
+    '<h2>Three phases</h2><table><tr><th>Phase</th><th>Dates</th><th>Goal</th></tr>'+
+    '<tr><td>1 · Learn</td><td>19 Nov 2026 – 1 Feb 2027</td><td>Complete all 72 chapters. Your internal-test calendar is dense, so new chapters continue alongside each test’s revision cycle until 1 Feb. Maths, Economics, Psychology and Political Science get extra weight.</td></tr>'+
+    '<tr><td>2 · Revise</td><td>2 Feb – 20 Feb 2027</td><td>Spaced revision, one-page sheets, weak-topic drills, full-length mocks. Pre-Board 2 in January is the diagnostic baseline.</td></tr>'+
+    '<tr><td>3 · Mock tests</td><td>21 Feb – 19 Mar 2027</td><td>Board-only focus. Gap days belong exclusively to the next paper. One full revision day before every exam.</td></tr></table>'+
+    '<h2>Weekly rhythm</h2><table><tr><th>Day</th><th>Rule</th></tr>'+
+    '<tr><td>Mon–Fri</td><td>7 × 50-min blocks with 10–20 min breaks; 06:30 wake, 22:30 sleep (8 hrs).</td></tr>'+
+    '<tr><td>Saturday</td><td>Lighter catch-up day — backlog, weak topics, notes, short quiz, early bedtime.</td></tr>'+
+    '<tr><td>Sunday</td><td>Previous Year Paper, 10:30–13:30 under exam conditions, followed by error analysis.</td></tr>'+
+    '<tr><td>Day before any exam</td><td>Full revision day — that subject only, two timed paper sections, flashcards, early sleep.</td></tr>'+
+    '<tr><td>Gap days between board exams</td><td>Next exam’s subject ONLY. No other subject is touched.</td></tr></table>'+
+    '<h2>Board exam schedule &amp; gap days</h2><table><tr><th>Date</th><th>Subject</th><th>Gap rule</th></tr>'+boardRows+'</table>'+
+    '<h2>Week-by-week plan</h2><table><tr><th>Week</th><th>Primary focus</th><th>New chapters</th><th>Tests</th></tr>'+weekRows+'</table>'+
+    '<p><b>Hard-subject weighting used:</b> Mathematics ×1.6, Economics ×1.25, Psychology ×1.15, Political Science ×1.10, English Core ×0.90, Painting ×0.70. Physics, Chemistry and Accountancy are not in your subject set.</p>';
+}
+
+/* ---------- WIRE UP ---------- */
+function renderAll(){renderStats();renderDay();renderRings();renderTimeline();renderTracker();renderWeak();renderMocks();buildPrint();}
+document.getElementById('prevDay').onclick=()=>{if(PLAN[addDays(viewDate,-1)]){viewDate=addDays(viewDate,-1);renderDay();}};
+document.getElementById('nextDay').onclick=()=>{if(PLAN[addDays(viewDate,1)]){viewDate=addDays(viewDate,1);renderDay();}};
+document.getElementById('todayBtn').onclick=()=>{viewDate=PLAN[ds(new Date())]?ds(new Date()):START;renderDay();};
+document.getElementById('printBtn').onclick=()=>{buildPrint();window.print();};
+document.getElementById('resetBtn').onclick=()=>{if(confirm('Reset all progress, weak topics and mock scores?')){st={status:{},difficult:{},done:{},mocks:[]};save();renderAll();}};
+document.getElementById('mockForm').onsubmit=e=>{
+  e.preventDefault();
+  st.mocks.push({s:document.getElementById('mSub').value,date:document.getElementById('mDate').value,
+    score:+document.getElementById('mScore').value,max:+document.getElementById('mMax').value});
+  save();renderAll();e.target.reset();document.getElementById('mMax').value=100;
+};
+document.getElementById('mDate').value=ds(new Date());
+renderAll();
+let lastSeenDate=ds(new Date());
+function syncClock(){
+  const now=new Date();
+  document.getElementById('liveClock').textContent=now.toLocaleString('en-IN',{weekday:'short',day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:true});
+  const today=ds(now);
+  if(today!==lastSeenDate){
+    lastSeenDate=today;
+    if(PLAN[today]){viewDate=today;renderAll();}
+    else renderStats();
+  }
+}
+syncClock();
+setInterval(syncClock,1000);
+</script>
+</body>
+</html>
